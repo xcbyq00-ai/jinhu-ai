@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jxhin177 - 기분별 트렌디 푸드 추천</title>
+    <!-- Tailwind CSS를 활용해 검정과 초록색의 힙한 테마 구현 -->
+    <script src="https://jsdelivr.net"></script>
+    <style>
+        /* 초록색 네온 포인트 컬러 커스텀 설정 */
+        .theme-green { color: #39FF14; }
+        .bg-theme-green { background-color: #39FF14; }
+        .border-theme-green { border-color: #39FF14; }
+    </style>
+</head>
+<body class="bg-black text-gray-100 min-h-screen flex flex-col items-center py-10 font-sans">
+
+    <!-- 헤더 영역 -->
+    <header class="text-center mb-10">
+        <h1 class="text-4xl font-extrabold mb-2 tracking-wider">
+            <span class="theme-green">jxhin177</span> FOOD AI 🧞‍♂️
+        </h1>
+        <p class="text-gray-400 text-sm">지금 당신의 마음에 딱 맞는 트렌디한 음식을 찾아드려요.</p>
+    </header>
+
+    <!-- 메인 컨텐츠 영역 -->
+    <main class="w-full max-w-2xl px-4">
+        <!-- 기분 선택 섹션 -->
+        <section class="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl shadow-xl text-center mb-8">
+            <h2 class="text-xl font-bold mb-4 text-white">지금 당신의 기분은 어떤가요?</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <button onclick="recommendFood('화남')" class="p-3 bg-zinc-800 hover:bg-zinc-700 border hover:border-emerald-500 rounded-xl transition font-medium">😡 화남</button>
+                <button onclick="recommendFood('슬픔')" class="p-3 bg-zinc-800 hover:bg-zinc-700 border hover:border-emerald-500 rounded-xl transition font-medium">😭 슬픔</button>
+                <button onclick="recommendFood('우울함')" class="p-3 bg-zinc-800 hover:bg-zinc-700 border hover:border-emerald-500 rounded-xl transition font-medium">😰 우울함</button>
+                <button onclick="recommendFood('기쁨')" class="p-3 bg-zinc-800 hover:bg-zinc-700 border hover:border-emerald-500 rounded-xl transition font-medium">🥰 기쁨</button>
+                <button onclick="recommendFood('서운함')" class="p-3 bg-zinc-800 hover:bg-zinc-700 border hover:border-emerald-500 rounded-xl transition font-medium">🥺 서운함</button>
+                <button onclick="recommendFood('즐거움')" class="p-3 bg-zinc-800 hover:bg-zinc-700 border hover:border-emerald-500 rounded-xl transition font-medium">🥳 즐거움</button>
+                <button onclick="recommendFood('기대됨')" class="p-3 bg-zinc-800 hover:bg-zinc-700 border hover:border-emerald-500 rounded-xl transition font-medium">🤩 기대됨</button>
+            </div>
+        </section>
+
+        <!-- 결과 출력 섹션 -->
+        <section id="result-box" class="hidden bg-zinc-900 border-2 border-theme-green p-6 rounded-2xl shadow-2xl transition-all duration-300">
+            <div class="text-center mb-6">
+                <p id="result-message" class="text-lg font-semibold text-white"></p>
+            </div>
+            
+            <!-- 음식 리스트 8가지 출력 공간 -->
+            <div id="food-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <!-- 자바스크립트로 데이터가 주입됩니다 -->
+            </div>
+        </section>
+    </main>
+
+    <!-- 푸터 영역 -->
+    <footer class="mt-auto pt-10 text-xs text-gray-600">
+        <p>© 2026 jxhin177 Food AI. All rights reserved.</p>
+    </footer>
+
+    <!-- 웹 사이트 구동 자바스크립트 로직 -->
+    <script>
+        // 최신 트렌드를 반영한 기분별 8가지 음식 데이터베이스
+        const foodDatabase = {
+            "화남": {
+                emote: "😡",
+                list: ["🔥 불마왕 마라탕", "🌶️ 엽기 떡볶이 (매운맛)", "🍗 핫 황금올리브 치킨", "🔥 매운 불족발", "🍜 틈새라면 빨계떡", "🥩 매운 갈비찜", "🔥 불닭볶음면 타코", "🍫 카카오 99% 다크 초콜릿"]
+            },
+            "슬픔": {
+                emote: "😭",
+                list: ["🍦 민트초코 젤라또", "🍰 꾸덕한 초코 브라우니", "🍩 크림 가득 도넛", "🧇 생크림 와플", "🥛 따뜻한 연유 라떼", "🍦 허니콤 벌집 아이스크림", "🧁마카롱 세트", "🥞 수플레 팬케이크"]
+            },
+            "우울함": {
+                emote: "😰",
+                list: [" 따뜻한 소고기 샤브샤브", " 국물 닭발과 주먹밥", " 치즈 폭탄 시카고 피자", " 삼겹살과 볶음밥", " 감자탕과 수제비 사리", " 곱창전골", " 김치전과 막걸리", " 따끈한 어묵탕"]
+            },
+            "기쁨": {
+                emote: "🥰",
+                list: ["🍣 한우 오마카세", "🥩 토마호크 스테이크", "🦀 영덕 대게 찜", "🍰 호텔 프리미엄 딸기 케이크", "🥂 무알콜 샴페인과 치즈 보드", "🍤 고급 모둠 숙성회", "🍔 수제 치즈버거 세트", "🍧 망고 사고 디저트"]
+            },
+            "서운함": {
+                emote: "🥺",
+                list: ["🥟 따뜻한 모둠 만두", "🥘 국물 떡볶이와 튀김", "🍙 스팸 참치마요 주먹밥", "🍢 길거리 물어묵", "🍜 계란 톡 넣은 진라면", "🍘 바삭한 김치전", "🍞 갓 구운 소금빵", "🥛 달콤한 바나나우유"]
+            },
+            "즐거움": {
+                emote: "🥳",
+                list: ["🍕 반반 피자 (페퍼로니/포테이토)", "🍗 뿌링클 치킨과 치즈볼", "🧋 타피오카 펄 밀크티", "🌭 크런치 핫도그", "🍿 카라멜 팝콘", "🌮 나쵸칩과 살사소스", "🍦 구슬 아이스크림", "🍡 탕후루 모둠"]
+            },
+            "기대됨": {
+                emote: "🤩",
+                list: ["🥩 두툼한 우대갈비 야외 바베큐", "🍲 마라훠궈 무한리필", "🍣 회전초밥 접시 쌓기", "🌮 풀드포크 타코 플래터", "🧀 치즈 퐁듀 코스", "🦐 버터 갈릭 랍스터", "🧇 크로플 홈카페 세트", "🍨 요아정(요거트아이스크림의정석) 토핑 폭탄"]
+            }
+        };
+
+        function recommendFood(mood) {
+            const data = foodDatabase[mood];
+            const resultBox = document.getElementById('result-box');
+            const resultMessage = document.getElementById('result-message');
+            const foodListContainer = document.getElementById('food-list');
+
+            // 1. 결과창 노출 및 메시지 변경
+            resultBox.classList.remove('hidden');
+            resultMessage.innerHTML = `지금 당신의 기분은 <span class="theme-green font-bold">${mood} ${data.emote}</span>이군요!<br>당신을 위해서 추천드리는 트렌디 음식이 여기 있습니다!`;
+
+            // 2. 음식 리스트 초기화 후 8가지 추가
+            foodListContainer.innerHTML = '';
+            data.list.forEach(food => {
+                const foodCard = document.createElement('div');
+                foodCard.className = "bg-zinc-800 border border-zinc-700 hover:border-theme-green p-4 rounded-xl font-semibold text-center text-white transition-all transform hover:-translate-y-1 shadow-md";
+                foodCard.innerText = food;
+                foodListContainer.appendChild(foodCard);
+            });
+
+            // 화면을 결과창으로 부드럽게 스크롤
+            resultBox.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
